@@ -1,0 +1,42 @@
+
+
+{% extends 'tourism/base.html' %}
+{% block content %}
+
+<h2 class="mb-3 text-success">{{ district.name }}</h2>
+
+<div class="row">
+  <div class="col-md-6">
+    {% for a in district.attractions %}
+    <div class="card mb-3 shadow-sm">
+      <img src="{{ a.image }}" class="card-img-top" style="height:220px; object-fit:cover;" alt="{{ a.title }}">
+      <div class="card-body">
+        <h5>{{ a.title }}</h5>
+        <p class="small text-muted">{{ a.subtitle }}</p>
+        <p>{{ a.desc }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mb-3 shadow-sm p-3">
+      <h5>Local Food</h5>
+      <p>{{ district.food|join:", " }}</p>
+    </div>
+
+    <div class="card mb-3 shadow-sm p-3">
+      <h5>Handicrafts</h5>
+      <p>{{ district.handicrafts|join:", " }}</p>
+    </div>
+
+    <div class="card mb-3 shadow-sm p-3">
+      <h5>Where to stay</h5>
+      <p>{{ district.stays|join:", " }}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+

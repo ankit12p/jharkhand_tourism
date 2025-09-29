@@ -1,0 +1,95 @@
+{% extends 'tourism/base.html' %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Welcome, {{ user.username }}!</h1>
+    <p>This is your personal dashboard. Here you can view your saved trips, manage your profile, and more.</p>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>My Profile</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+  <h2>Welcome back, <strong>{{ user.username }}</strong>!</h2>
+  <p>Your email: {{ user.email }}</p>
+
+  <hr>
+
+  <h3>Planned Trips</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for trip in planned_trips %}
+        <tr>
+          <td>{{ trip.name }}</td>
+          <td>{{ trip.date }}</td>
+          <td>{{ trip.status }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No planned trips yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Explored Places</h3>
+  <ul class="list-group">
+    {% for place in explored_places %}
+      <li class="list-group-item">
+        {{ place.name }} ({{ place.date }}) – ⭐ {{ place.rating }}
+      </li>
+    {% empty %}
+      <li class="list-group-item">No places explored yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- 🚨 Floating SOS Button -->
+<!-- 🚨 Floating SOS Button -->
+<a href="{% url 'tourism:sos_alert' %}" class="sos-btn">SOS</a>
+
+<style>
+.sos-btn {
+    position: fixed;
+    bottom: 100px;   /* above chatbot */
+    right: 20px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 15px 25px;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+    text-decoration: none;
+    z-index: 1000;
+    transition: transform 0.2s ease-in-out;
+    animation: pulse 1.5s infinite;
+}
+.sos-btn:hover {
+    transform: scale(1.1);
+    background-color: darkred;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 5px rgba(255,0,0,0.6); }
+  50%  { box-shadow: 0 0 20px rgba(255,0,0,1); }
+  100% { box-shadow: 0 0 5px rgba(255,0,0,0.6); }
+}
+</style>
+
+</style>
+{% endblock %}

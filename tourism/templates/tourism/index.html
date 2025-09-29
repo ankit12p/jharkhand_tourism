@@ -1,0 +1,168 @@
+{% extends 'tourism/base.html' %}
+{% block content %}
+
+<!-- Hero with Background Image -->
+<div class="p-5 text-center text-white rounded" style="position:relative; background: url('https://imgs.search.brave.com/uKWMWhO9a8d914dh8MjPfX-0VZLz-CtLlP_27Z4w40c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzQ5Lzkz/L2E4LzQ5OTNhODk2/MGJhNzQ4YWI5ZTVl/MWZjYWYxZmM4ZThh/LmpwZw') center center/cover no-repeat; min-height:320px;">
+  <div style="position:absolute; inset:0; background:rgba(34, 139, 34, 0.55); border-radius:inherit;"></div>
+  <div style="position:relative; z-index:2;">
+    <h1 class="display-6">Explore Jharkhand</h1>
+    <p class="lead">Waterfalls • Wildlife • Culture • Handicrafts</p>
+    <form class="d-flex justify-content-center mt-4" onsubmit="return false;">
+      <input id="searchBox" type="text" class="form-control w-50" placeholder="Search destinations (e.g., Netarhat, Betla)">
+      <button onclick="searchPlace()" class="btn btn-warning ms-2">Search</button>
+    </form>
+  </div>
+</div>
+
+<!-- Carousel -->
+<div id="tourismCarousel" class="carousel slide mt-4 shadow-sm" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for slide in carousel_images %}
+    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      <img src="{{ slide.url }}" class="d-block w-100" style="height:450px; object-fit:cover;" alt="{{ slide.title }}">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+        <h5>{{ slide.title }}</h5>
+        <p>{{ slide.caption }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#tourismCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#tourismCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- Experiences Section -->
+<h2 class="text-center mt-5">Browse by Experience</h2>
+<div class="row mt-4 justify-content-center">
+  {% for exp in experiences %}
+    {% if forloop.counter <= 6 %}
+    <div class="col-lg-2 col-md-3 col-sm-4 mb-4">
+      <div class="card h-100 shadow-sm text-center">
+        <img src="{{ exp.image }}" class="card-img-top" style="height:120px; object-fit:cover;" alt="{{ exp.name }}">
+        <div class="card-body p-2">
+          <h6 class="card-title mb-0">{{ exp.name }}</h6>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<!-- "More Experiences" Button -->
+<div class="text-center my-3">
+  <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#moreExperiences" aria-expanded="false" aria-controls="moreExperiences">
+    Show More Experiences
+  </button>
+</div>
+
+<!-- Collapsible section for other experiences -->
+<div class="collapse" id="moreExperiences">
+  <div class="row mt-4 justify-content-center">
+    {% for exp in experiences %}
+      {% if forloop.counter > 6 %}
+      <div class="col-lg-2 col-md-3 col-sm-4 mb-4">
+        <div class="card h-100 shadow-sm text-center">
+          <img src="{{ exp.image }}" class="card-img-top" style="height:120px; object-fit:cover;" alt="{{ exp.name }}">
+          <div class="card-body p-2">
+            <h6 class="card-title mb-0">{{ exp.name }}</h6>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- District Cards -->
+<h2 class="text-center mt-5">Explore by District</h2>
+<div class="row mt-4">
+  {% for d in districts %}
+    {% if forloop.counter <= 4 %}
+    <div class="col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{{ d.image }}" class="card-img-top" style="height:180px; object-fit:cover;" alt="{{ d.display }}">
+        <div class="card-body text-center d-flex flex-column">
+          <h5 class="card-title">{{ d.display }}</h5>
+          <p class="text-muted small mb-3">{{ d.tagline }}</p>
+          <a href="{% url 'tourism:district' d.slug %}" class="btn btn-success mt-auto">View</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<!-- "Explore More" Button -->
+<div class="text-center my-3">
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#moreDistricts" aria-expanded="false" aria-controls="moreDistricts">
+    Explore More Districts
+  </button>
+</div>
+
+<!-- Collapsible section for other districts -->
+<div class="collapse" id="moreDistricts">
+  <div class="row mt-4">
+    {% for d in districts %}
+      {% if forloop.counter > 4 %}
+      <div class="col-md-3 mb-4">
+        <div class="card h-100 shadow-sm">
+          <img src="{{ d.image }}" class="card-img-top" style="height:180px; object-fit:cover;" alt="{{ d.display }}">
+          <div class="card-body text-center d-flex flex-column">
+            <h5 class="card-title">{{ d.display }}</h5>
+            <p class="text-muted small mb-3">{{ d.tagline }}</p>
+            <a href="{% url 'tourism:district' d.slug %}" class="btn btn-success mt-auto">View</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+
+<!-- AI Trip Planner -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h2 class="mb-3">AI-Powered Trip Planner</h2>
+            <p class="lead mb-4">Let our AI assistant help you build the perfect Jharkhand itinerary.</p>
+            <button class="btn btn-lg btn-warning" data-bs-toggle="modal" data-bs-target="#aiPlannerModal">
+                Launch Trip Planner
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- AI Planner Modal (Large) -->
+<div class="modal fade" id="aiPlannerModal" tabindex="-1" aria-labelledby="aiPlannerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aiPlannerModalLabel">Jharkhand AI Trip Planner</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 70vh;">
+        <iframe src="https://www.chatbase.co/chatbot-iframe/Hm7BvbdaajjrxEX-14Y9q" width="100%" height="100%" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function searchPlace(){
+  const q = document.getElementById('searchBox').value.trim();
+  if(!q){ alert('Type a place to search (try: Ranchi, Netarhat)'); return; }
+  window.location.href = '/district/' + encodeURIComponent(q.toLowerCase());
+}
+</script>
+
+{% endblock %}
+
+
+---
+

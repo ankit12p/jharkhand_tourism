@@ -1,0 +1,177 @@
+{% extends 'tourism/base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid mt-4">
+    <h1 class="h2 mb-4">Admin Dashboard</h1>
+
+    <!-- Key Metrics -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Tourists (Sample Data)</div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ total_tourists }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Overall Sentiment</div>
+                <div class="card-body">
+                    <h4 class="card-title">Positive</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Feedback Submissions</div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ feedback_list|length }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Analysis Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-brain"></i> AI-Powered Suggestions & Analysis</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>Summary:</strong> {{ ai_suggestions.summary }}</p>
+            <h6 class="mt-4">Actionable Insights:</h6>
+            <ul>
+                {% for insight in ai_suggestions.actionable_insights %}
+                <li>{{ insight }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">Most Visited Places</div>
+                <div class="card-body">
+                    <canvas id="mostVisitedChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">Sentiment by Place Type</div>
+                <div class="card-body">
+                    <canvas id="placeTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Feedback Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Recent Feedback & Suggestions</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for feedback in feedback_list %}
+                        <tr>
+                            <td>{{ feedback.user }}</td>
+                            <td>{{ feedback.rating }}/5</td>
+                            <td>{{ feedback.comment }}</td>
+                            <td>{{ feedback.category }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart 1: Most Visited Places (Bar Chart)
+    const mostVisitedCtx = document.getElementById('mostVisitedChart').getContext('2d');
+    new Chart(mostVisitedCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ visit_labels|safe }},
+            datasets: [{
+                label: 'Number of Visitors',
+                data: {{ visit_data|safe }},
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Chart 2: Sentiment by Place Type (Doughnut Chart)
+    const placeTypeCtx = document.getElementById('placeTypeChart').getContext('2d');
+    new Chart(placeTypeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ place_type_labels|safe }},
+            datasets: [{
+                label: 'Sentiment Score',
+                data: {{ place_type_data|safe }},
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.7)', // Very Positive
+                    'rgba(23, 162, 184, 0.7)', // Positive
+                    'rgba(255, 193, 7, 0.7)',  // Mixed
+                    'rgba(220, 53, 69, 0.7)'   // Needs Improvement
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            const value = context.raw;
+                            const sentimentMap = {2: 'Very Positive', 1: 'Positive', 0: 'Mixed', '-1': 'Needs Improvement'};
+                            label += sentimentMap[value] || 'Unknown';
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

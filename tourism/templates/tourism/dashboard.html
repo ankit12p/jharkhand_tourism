@@ -1,0 +1,39 @@
+
+{% extends 'tourism/base.html' %}
+{% block content %}
+<h2 class="text-center text-success mb-4">Tourism Admin Dashboard (Demo)</h2>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card p-3 shadow-sm">
+      <h6>Top Districts by Visits</h6>
+      <ol>
+        {% for t in top_districts %}
+        <li>{{ t.name }} — {{ t.visits }} visits</li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 shadow-sm">
+      <h6>SOS Activity (Demo)</h6>
+      <p>No active SOS</p>
+      <button class="btn btn-danger">Trigger SOS (Demo)</button>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 shadow-sm">
+      <h6>Top Tourists</h6>
+      <ul>
+        <li>Rahul — 12 visits</li>
+        <li>Sana — 9 visits</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
